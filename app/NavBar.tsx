@@ -1,10 +1,12 @@
 'use client'
+
 import React from 'react';
 import Link from 'next/link';
 import {AiFillBug} from 'react-icons/ai';
 import { usePathname } from 'next/navigation';
 import { log } from 'console';
 import classNames from 'classnames';
+import { Button } from '@radix-ui/themes';
 
 const NavBar = () => {
     const currentPath = usePathname();
@@ -28,6 +30,14 @@ const NavBar = () => {
                 href={link.href}>{link.label}</Link>
             )}
         </ul>
+        <div className='lg:flex lg:flex-1 lg:justify-end items-center space-x-6'>
+            <Button className=''>
+                <Link className='' href="/users/login">
+                    Log in
+                </Link>
+            </Button>
+            <Link href="/users/register">Register</Link>
+        </div>
     </nav>
   )
 }
