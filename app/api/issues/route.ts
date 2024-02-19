@@ -11,11 +11,10 @@ export async function POST(request: NextRequest) {
         data: { title: body.title, description: body.description }
     });
 
-    return NextResponse.json(newIssue, { status: 201 });
+    return NextResponse.json(newIssue, { status: 200 });
 }
 
 export async function GET() {
     const issue = await prisma.issue.findMany();
     return NextResponse.json(issue, { status: 200 })
 }
-
