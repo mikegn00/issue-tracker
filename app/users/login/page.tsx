@@ -12,9 +12,9 @@ import axios from 'axios';
 
 type LoginForm = z.infer<typeof userLoginSchema>;
 
-const LoginPage = () => {
+function LoginPage() {
 
-  const { register, control, handleSubmit, formState: { errors } }  = useForm<LoginForm>({
+  const { register, handleSubmit: onSubmit, formState: { errors } }  = useForm<LoginForm>({
     resolver: zodResolver(userLoginSchema)
   });
 
@@ -22,21 +22,28 @@ const LoginPage = () => {
   const [error, setError] = useState('');
   const [isSubmitted, setSubmitted] = useState(false);
 
+  const handleSubmit = async (data: LoginForm) => {
+    try {
+      console.log(error);
+      setSubmitted(true);
+      const result = await axios.post('/api/users/login', data);
+      console.log(result.data);
+      if (result){
+        router.push('/');
+        router.refresh();
+      }
+    } catch (error) {
+      setSubmitted(false);
+      setError('An unexpected error occured.');
+    }
+
+  }
+
   return (
     <div className='container mx-auto'>
       <Grid columns='2'>
         <Section className='mr-2 space-y-2'>
-          <form className='space-y-2' onSubmit={handleSubmit( async (data) => {
-            try {
-              console.log(error);
-              setSubmitted(true);
-              await axios.post('/api/users/login', data);
-              router.push('/');
-            } catch (error) {
-              setSubmitted(false);
-              setError('An unexpected error occured.');
-            }
-          })}>
+          <form className='space-y-2' onSubmit={onSubmit(handleSubmit)}>
             <Heading size='8'>Login</Heading>
 
             <Text>Email</Text>

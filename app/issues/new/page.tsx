@@ -62,6 +62,7 @@ const NewIssuePage = () => {
             control={control}
             render={({ field }) => <SimpleMdeEditor placeholder='Description' {...field}/>}
           />
+          
           <ErrorMessage >
             {errors.description?.message}
           </ErrorMessage>
