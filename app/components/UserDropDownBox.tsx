@@ -1,9 +1,11 @@
 'use client';
 import { User } from '@prisma/client';
 import { Box, DropdownMenu, Text, Avatar, Button } from '@radix-ui/themes';
+import { getServerSession } from 'next-auth';
 import Link from 'next/link';
 import React from 'react'
 import { AiFillCaretDown } from 'react-icons/ai';
+import authOptions from '../auth/authOptions';
 
 function UserDropDownBox(session:any) {
     const user:User = session.session as User;

@@ -2,7 +2,6 @@ import { User } from '@prisma/client';
 import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 
-
 const secretKey = 'secret';
 const key = new TextEncoder().encode(secretKey);
 

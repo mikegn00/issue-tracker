@@ -4,10 +4,12 @@ import Link from "next/link";
 import UserDropDownBox from "./UserDropDownBox";
 import { User } from "@prisma/client";
 import { JWTPayload } from "jose";
+import { useSession } from "next-auth/react";
 
-const SessionStatus = async () => {
-    const sessionUser = await getSession();
-    if (!sessionUser) {
+export const SessionStatus = () => {
+    const { data: session } = useSession();
+    // const sessionUser = await getSession();
+    if (!session) {
         return  (
             <div className='flex flex-1 justify-end items-center space-x-6'>
                 <Link href="/users/login">
@@ -21,8 +23,8 @@ const SessionStatus = async () => {
     }
     return (
         <div className='flex flex-1 justify-end items-center space-x-6'>
-            <UserDropDownBox session={sessionUser.account} />
+            <UserDropDownBox session={session.user} />
         </div>
     );
 }
-export default SessionStatus;
+// export default SessionStatus;
