@@ -9,7 +9,7 @@ export const createIssueSchema = z.object({
 
 export const createUserSchema = z.object({
     fullname: z.string().min(1, 'Please enter full name').max(255),
-    password: z.string().min(8, 'Password is required'),
+    password: z.string().min(8, 'Password have to be more than 8 letters'),
     email: z.string().min(1, "Email is required").email("This is not a valid email"),
 });
 

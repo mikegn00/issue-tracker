@@ -6,6 +6,7 @@ import Link from 'next/link';
 import React from 'react'
 import { AiFillCaretDown } from 'react-icons/ai';
 import authOptions from '../auth/authOptions';
+import { signOut } from 'next-auth/react';
 
 function UserDropDownBox(session:any) {
     const user:User = session.session as User;
@@ -24,7 +25,7 @@ function UserDropDownBox(session:any) {
                         <Text size='2'>{user.email}</Text>
                     </DropdownMenu.Label>
                     <DropdownMenu.Item>
-                        <Link href=''>Logout</Link>
+                        <Button onClick={() => signOut()}>Logout</Button>
                     </DropdownMenu.Item>
                 </DropdownMenu.Content>
             </DropdownMenu.Root>

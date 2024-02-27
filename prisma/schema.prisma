@@ -28,9 +28,9 @@ enum Status {
 
 model User {
   id        Int      @id @default(autoincrement())
-  fullname  String   @db.VarChar(255)
-  email     String   @db.VarChar(255)
-  password  String   @db.VarChar(255)
+  fullname  String
+  email     String   @unique
+  password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   role      Role?    @relation(fields: [roleId], references: [id])
@@ -39,6 +39,6 @@ model User {
 
 model Role {
   id    Int    @id @default(autoincrement())
-  name  String @db.VarChar(255)
+  name  String
   users User[]
 }

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import {AiFillBug} from 'react-icons/ai';
 import NavBarLinks from './components/NavBarLinks';
 import { getSession } from './lib/authentication';
-import { SessionStatus } from './components/SessionStatus';
+import SessionStatus from './components/SessionStatus';
 import { User } from '@prisma/client';
 
 const NavBar = async () => {

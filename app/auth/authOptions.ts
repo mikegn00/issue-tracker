@@ -3,14 +3,11 @@ import { NextAuthOptions } from "next-auth";
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from "next-auth/providers/credentials";
+import { compare } from "bcrypt";
 
 const authOptions: NextAuthOptions = {
     adapter: PrismaAdapter,
     providers: [
-        GoogleProvider({
-            clientId: process.env.GOOGLE_CLIENT_ID!,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-        }),
         CredentialsProvider({
             name: 'Email',
             credentials: {
@@ -22,8 +19,28 @@ const authOptions: NextAuthOptions = {
                 password: { label: 'Password', type: 'password' }
             },
             async authorize(credentials) {
-                const user = { id: '1', name: 'Michael', email: 'michael@microtill.com', pass: 'true' }
-                return user
+                if (!credentials?.email || !credentials.password){
+                    return null;
+                }
+
+                const users = await prisma.user.findUnique({
+                    where: {
+                        email: credentials.email
+                    }
+                });
+
+                if (!users) {
+                    return null;
+                }
+                const isPasswordValid = await compare(credentials.password, users.password);
+                if (!isPasswordValid){
+                    return null;
+                }
+                return {
+                    id: users.id + '',
+                    email: users.email,
+                    fullname: users.fullname,
+                };
             }
         }),
     ],
