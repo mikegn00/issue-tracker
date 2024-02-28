@@ -24,8 +24,8 @@ function UserDropDownBox(session:any) {
                     <DropdownMenu.Label>
                         <Text size='2'>{user.email}</Text>
                     </DropdownMenu.Label>
-                    <DropdownMenu.Item>
-                        <Button onClick={() => signOut()}>Logout</Button>
+                    <DropdownMenu.Item onClick={() => signOut()}>
+                        Log out
                     </DropdownMenu.Item>
                 </DropdownMenu.Content>
             </DropdownMenu.Root>

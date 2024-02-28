@@ -60,7 +60,9 @@ const IssueIdPage = ({ params }: { params: { id: number }}) => {
                     try {
                         console.log(data);
                         await axios.put(`/api/issues/${issued.id}`, data);
-                        router.push('/issues');
+                        // router.push('/issues');
+                        router.back();
+                        router.refresh();
                     } catch (error) {
                         console.log(error);
                     }

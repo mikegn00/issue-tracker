@@ -10,7 +10,7 @@ export default async function Home() {
       <Heading className='py-4' size='8'>
         Issue Tracker
       </Heading>
-      <pre>{JSON.stringify(user)}</pre>
+      <pre>{JSON.stringify(user?.user)}</pre>
     </div>
   )
 }

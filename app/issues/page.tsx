@@ -1,46 +1,61 @@
-'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { Badge, Button, Flex, Heading, ScrollArea, Select, Table } from '@radix-ui/themes';
 import Link from 'next/link';
 import { Issue, Status } from '@prisma/client';
 import axios from 'axios';
 import { FaRegEdit } from 'react-icons/fa';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Pagination from '../components/ui/Pagination';
+import { fetchFilteredIssues } from '../lib/issues/data';
+import StatusSelect from '../components/ui/issues/status';
+import { ClearFilters } from '../components/ui/issues/buttons';
 
 function getEnumKeys<T extends string, TEnumValue extends string | number>(enumVariable: { [key in T]: TEnumValue }) {
   return Object.keys(enumVariable) as Array<T>;
 }
 
 
-const IssuesPage = () => {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const page = searchParams.get('page') ?? 1;
-  const status = searchParams.get('status') ?? '';
-  const [issues, setIssues] = useState<Issue[]>([]);
-  useEffect(() => {
-    async function fetchIssues() {
-      try {
-        const response = await axios.get(`/api/issues?status=${status}&page=${page}`);
-        setIssues(response.data);
-      } catch (error) {
+const IssuesPage = async ({ searchParams, }: {
+  searchParams?: {
+    page?: string;
+    status?: string;
+  }
+}) => {
+  // const router = useRouter();
+  // const searchParams = useSearchParams();
+  const page = Number(searchParams?.page) || 1;
+  const status = searchParams?.status || '';
+  
+
+  // const [issues, setIssues] = useState<Issue[]>([]);
+  // useEffect(() => {
+  //   async function fetchIssues() {
+  //     try {
+  //       const response = await axios.get(`/api/issues?status=${status}&page=${page}`);
+  //       setIssues(response.data);
+  //     } catch (error) {
         
-      }
-    }
-    fetchIssues();
-  }, []);
+  //     }
+  //   }
+  //   fetchIssues();
+  // }, []);
+  const filteredIssues = await fetchFilteredIssues(page.toString(), status);
   return (
     <div className='container mx-auto px-4'>
-      <Heading className='py-5' size='8'>Issues</Heading>
       <Flex gap='3'>
-
+        <Heading className='py-5' size='8'>Issues</Heading>
         <Link href='/issues/new'>
-          <Button>
+          <Button my='5'>
             New Issue
           </Button>
         </Link>
+      </Flex>
+      <Flex gap='3'>
+
         
-        <Select.Root >
+        <StatusSelect />
+        <ClearFilters />
+        {/* <Select.Root >
           <Select.Trigger placeholder='Select status' />
           <Select.Content>
             {getEnumKeys(Status).map((key, index) => (
@@ -49,7 +64,7 @@ const IssuesPage = () => {
                 </Select.Item>
             ))}
           </Select.Content>
-        </Select.Root>
+        </Select.Root> */}
 
       </Flex>
       <ScrollArea scrollbars='vertical'>
@@ -64,7 +79,7 @@ const IssuesPage = () => {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {issues.map(issue => 
+              {filteredIssues?.map(issue => 
               <Table.Row key={issue.id}>
                 <Table.Cell>{issue.title}</Table.Cell>
                 {/* <Table.Cell>{issue.description}</Table.Cell> */}
@@ -78,6 +93,8 @@ const IssuesPage = () => {
           </Table.Root>
         </div>
       </ScrollArea>
+      <Pagination totalPages={page} />
+
     </div>
   )
 }
