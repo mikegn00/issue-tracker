@@ -2,6 +2,7 @@ import { Status } from "@prisma/client";
 
 
 const ITEMS_PER_PAGE = 5;
+
 export async function fetchFilteredIssues(page: string, status: string) {
     const offset = (Number(page??'1') - 1) * ITEMS_PER_PAGE;
     try {
@@ -20,6 +21,25 @@ export async function fetchFilteredIssues(page: string, status: string) {
                 take: ITEMS_PER_PAGE,
                 skip: offset,
             });
+        }
+        return issues;
+    } catch (error) {
+        
+    }
+}
+
+export async function totalIssues(status: string) {
+    let issues;
+    try {
+        if (status && Object.values(Status).includes(status as Status)) {
+            issues = await prisma?.issue.findMany({
+                where: {
+                    status: status as Status
+                }
+            });
+        }
+        else {
+            issues = await prisma?.issue.findMany();
         }
         return issues;
     } catch (error) {

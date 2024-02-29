@@ -6,7 +6,7 @@ import axios from 'axios';
 import { FaRegEdit } from 'react-icons/fa';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Pagination from '../components/ui/Pagination';
-import { fetchFilteredIssues } from '../lib/issues/data';
+import { fetchFilteredIssues, totalIssues } from '../lib/issues/data';
 import StatusSelect from '../components/ui/issues/status';
 import { ClearFilters } from '../components/ui/issues/buttons';
 
@@ -21,25 +21,11 @@ const IssuesPage = async ({ searchParams, }: {
     status?: string;
   }
 }) => {
-  // const router = useRouter();
-  // const searchParams = useSearchParams();
   const page = Number(searchParams?.page) || 1;
   const status = searchParams?.status || '';
-  
-
-  // const [issues, setIssues] = useState<Issue[]>([]);
-  // useEffect(() => {
-  //   async function fetchIssues() {
-  //     try {
-  //       const response = await axios.get(`/api/issues?status=${status}&page=${page}`);
-  //       setIssues(response.data);
-  //     } catch (error) {
-        
-  //     }
-  //   }
-  //   fetchIssues();
-  // }, []);
   const filteredIssues = await fetchFilteredIssues(page.toString(), status);
+  const totalIssue = await totalIssues(status);
+  
   return (
     <div className='container mx-auto px-4'>
       <Flex gap='3'>
@@ -93,7 +79,7 @@ const IssuesPage = async ({ searchParams, }: {
           </Table.Root>
         </div>
       </ScrollArea>
-      <Pagination totalPages={page} />
+      <Pagination totalPages={(totalIssue ? totalIssue.length : 0)} />
 
     </div>
   )

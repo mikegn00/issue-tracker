@@ -6,21 +6,24 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { RiArrowDropLeftLine, RiArrowDropRightLine } from 'react-icons/ri';
 
+const ITEMS_PER_PAGE = 5;
+
 export default function Pagination({ totalPages }: { totalPages: number}) {
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const currentPage = Number(searchParams.get('page')) || 1;
-
+    const total = totalPages === 0 ? 1 : totalPages / ITEMS_PER_PAGE;
     const createPageURL = (pageNumber: number | string) => {
         const params = new URLSearchParams(searchParams);
         params.set('page', pageNumber.toString());
         return `${pathname}?${params.toString()}`;
     }
+    console.log(total);
     return (
         <div className="space-x-3">
             <Flex gap='3'>
                 <PaginationArrow direction='left' href={createPageURL(currentPage - 1)} isDisabled={currentPage <= 1} />
-                <PaginationArrow direction='right' href={createPageURL(currentPage + 1)} isDisabled={false} />
+                <PaginationArrow direction='right' href={createPageURL(currentPage + 1)} isDisabled={currentPage >= total} />
                 {/* <Link href={createPageURL(totalPages - 1)}>Prev</Link>
                 <Link href={createPageURL(totalPages + 1)}>Next</Link> */}
             </Flex>
