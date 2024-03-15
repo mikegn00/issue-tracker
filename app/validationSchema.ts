@@ -7,6 +7,12 @@ export const createIssueSchema = z.object({
     status: z.nativeEnum(Status).default('OPEN'),
 });
 
+export const createProjectSchema = z.object({
+    title: z.string().min(1, 'Title is required.').max(255),
+    description: z.string().min(1, 'Description is required'),
+    status: z.nativeEnum(Status).default('OPEN'),
+});
+
 export const createUserSchema = z.object({
     fullname: z.string().min(1, 'Please enter full name').max(255),
     password: z.string().min(8, 'Password have to be more than 8 letters'),

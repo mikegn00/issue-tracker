@@ -10,8 +10,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import ErrorMessage from '@/app/components/ErrorMessage';
 import axios from 'axios';
 import { signIn } from 'next-auth/react';
+import Head from 'next/head';
+import { Metadata } from 'next';
 
 type LoginForm = z.infer<typeof userLoginSchema>;
+
 
 function LoginPage() {
 
@@ -46,6 +49,8 @@ function LoginPage() {
   }
 
   return (
+    <>
+    <title>Login</title>
     <div >
       <Container size='2'>
         <Card className='mx-auto p-4'>
@@ -76,6 +81,7 @@ function LoginPage() {
         </Card>
       </Container>
     </div>
+    </>
   )
 }
 

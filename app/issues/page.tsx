@@ -9,6 +9,7 @@ import Pagination from '../components/ui/Pagination';
 import { fetchFilteredIssues, totalIssues } from '../lib/issues/data';
 import StatusSelect from '../components/ui/issues/status';
 import { ClearFilters } from '../components/ui/issues/buttons';
+import Head from 'next/head';
 
 function getEnumKeys<T extends string, TEnumValue extends string | number>(enumVariable: { [key in T]: TEnumValue }) {
   return Object.keys(enumVariable) as Array<T>;
@@ -27,6 +28,8 @@ const IssuesPage = async ({ searchParams, }: {
   const totalIssue = await totalIssues(status);
   
   return (
+    <>
+    <title>Issues</title>
     <div className='container mx-auto px-4'>
       <Flex gap='3'>
         <Heading className='py-5' size='8'>Issues</Heading>
@@ -82,6 +85,7 @@ const IssuesPage = async ({ searchParams, }: {
       <Pagination totalPages={(totalIssue ? totalIssue.length : 0)} />
 
     </div>
+    </>
   )
 }
 
