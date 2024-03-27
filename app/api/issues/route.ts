@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma/client";
-import { createIssueSchema } from "../../validationSchema";
+import { createIssueSchema } from "@/app/validationSchema";
 import { Status } from "@prisma/client";
 
 const ITEMS_PER_PAGE = 5;
 
+// POST async function for api/issues
 export async function POST(request: NextRequest) {
     const body = await request.json();
     const validation = createIssueSchema.safeParse(body);
@@ -16,11 +17,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(newIssue, { status: 200 });
 }
 
-// export async function GET() {
-//     const issue = await prisma.issue.findMany();
-//     return NextResponse.json(issue, { status: 200 })
-// }
-
+// GET async function for api/issues
 export async function GET(req: NextRequest) {
     const status = req.nextUrl.searchParams.get('status')?.toUpperCase();
     const page = req.nextUrl.searchParams.get('page');
