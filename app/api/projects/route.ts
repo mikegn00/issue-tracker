@@ -25,9 +25,8 @@ export async function GET(request: NextRequest) {
 
     const offset = (Number(page ?? '1') - 1) * ITEMS_PER_PAGE;
 
-    
     let issues;
-    if (status && Object.values(Status).includes(status as Status)){
+    if (status && Object.values(Status).includes(status as Status)) {
         issues = await prisma?.issue.findMany({
             where: {
                 status: status as Status

@@ -1,6 +1,6 @@
 'use client';
 import { createProjectSchema } from '@/app/validationSchema';
-import { Button, Flex, Heading, TextField } from '@radix-ui/themes'
+import { Button, Flex, Heading, TextField, Text } from '@radix-ui/themes'
 import 'easymde/dist/easymde.min.css';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
@@ -9,6 +9,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Spinner from '@/app/components/Spinner';
+import axios from 'axios';
 
 const SimpleMdeEditor = dynamic(
     () => import('react-simplemde-editor'),
@@ -32,21 +33,25 @@ const NewProjectPage = () => {
                 onSubmit={handleSubmit(async (data) => {
                     try {
                         setSubmitted(true);
+                        await axios.post('/api/projects', data);
                         router.push('/projects')
                     } catch (error) {
                         setSubmitted(false);
                         setError('An unexpected error occured.');
                     }
                 })}>
+                <Text>Title</Text>
                 <TextField.Root>
                     <TextField.Input placeholder='Title' {...register('title')}/>
                 </TextField.Root>
 
+                <Text>Description:</Text>
                 <Controller
                     name='description'
                     control={control}
                     render={({ field }) => <SimpleMdeEditor placeholder='Description' {...field} />}
                     />
+
 
                 <Button disabled={isSubmitted}>Create New Project{isSubmitted && <Spinner/>}</Button>
             </form>
