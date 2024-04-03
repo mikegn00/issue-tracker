@@ -1,4 +1,4 @@
-'use client';
+'use client'
 import { createProjectSchema } from '@/app/validationSchema';
 import { Button, Flex, Heading, TextField, Text } from '@radix-ui/themes'
 import 'easymde/dist/easymde.min.css';
@@ -10,6 +10,8 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Spinner from '@/app/components/Spinner';
 import axios from 'axios';
+import { useSession } from 'next-auth/react';
+import { User } from '@prisma/client';
 
 const SimpleMdeEditor = dynamic(
     () => import('react-simplemde-editor'),
@@ -18,11 +20,16 @@ const SimpleMdeEditor = dynamic(
 
 type ProjectForm = z.infer<typeof createProjectSchema>;
 
-const NewProjectPage = () => {
+function NewProjectPage() {
     const router = useRouter();
+    const { data:session }:any = useSession();
+    const user:User = session?.user as User;
+
     const { register, control, handleSubmit, formState: { errors } } = useForm<ProjectForm>({
-        resolver: zodResolver(createProjectSchema)
+        resolver: zodResolver(createProjectSchema),
     });
+    console.log(user?.id);
+
     const [error, setError] = useState('');
     const [isSubmitted, setSubmitted] = useState(false);
   return (
@@ -33,6 +40,7 @@ const NewProjectPage = () => {
                 onSubmit={handleSubmit(async (data) => {
                     try {
                         setSubmitted(true);
+                        console.log(user.id);
                         await axios.post('/api/projects', data);
                         router.push('/projects')
                     } catch (error) {
@@ -40,6 +48,12 @@ const NewProjectPage = () => {
                         setError('An unexpected error occured.');
                     }
                 })}>
+                <TextField.Root style={{display: 'none'}} >
+                    <TextField.Input type='number' value={user?.id} {...register('createdUser')}/>
+                </TextField.Root>
+                <TextField.Root style={{display: 'none'}}>
+                    <TextField.Input type='number' value={user?.id} {...register('updatedUser')}/>
+                </TextField.Root>
                 <Text>Title</Text>
                 <TextField.Root>
                     <TextField.Input placeholder='Title' {...register('title')}/>

@@ -11,6 +11,8 @@ export const createProjectSchema = z.object({
     title: z.string().min(1, 'Title is required.').max(255),
     description: z.string().min(1, 'Description is required'),
     status: z.nativeEnum(Status).default('OPEN'),
+    createdUser: z.coerce.number().int(),
+    updatedUser: z.coerce.number().int(),
 });
 
 export const createUserSchema = z.object({
