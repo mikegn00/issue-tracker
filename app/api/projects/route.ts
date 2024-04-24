@@ -17,6 +17,7 @@ export async function POST(request: NextRequest) {
             description: body.description, 
             createdUser: body.createdUser, 
             updatedUser: body.updatedUser,
+            userId: Number(body.user.id),
         }
     });
     return NextResponse.json(newIssue, { status: 200 });

@@ -14,8 +14,10 @@ export async function POST(request: NextRequest) {
     const newIssue = await prisma.issue.create({
         data: { 
             title: body.title, 
-            description: body.description 
-        }
+            description: body.description,
+            createdUser: Number(body.user.id),
+            updatedUser: Number(body.user.id),
+        },
     });
     return NextResponse.json(newIssue, { status: 200 });
 }
@@ -49,4 +51,3 @@ export async function GET(req: NextRequest) {
         
     }
 }
-

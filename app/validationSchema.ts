@@ -1,10 +1,11 @@
-import { Status } from '@prisma/client';
+import { Status, User } from '@prisma/client';
 import { z } from 'zod';
 
 export const createIssueSchema = z.object({
     title: z.string().min(1, 'Title is required.').max(255),
     description: z.string().min(1, 'Description is required.'),
     status: z.nativeEnum(Status).default('OPEN'),
+    user: z.custom<User>(),
 });
 
 export const createProjectSchema = z.object({
@@ -13,6 +14,7 @@ export const createProjectSchema = z.object({
     status: z.nativeEnum(Status).default('OPEN'),
     createdUser: z.coerce.number().int(),
     updatedUser: z.coerce.number().int(),
+    user: z.custom<User>(),
 });
 
 export const createUserSchema = z.object({
@@ -24,4 +26,4 @@ export const createUserSchema = z.object({
 export const userLoginSchema = z.object({
     email: z.string().min(1, "Email required").email("Not a valid email address"),
     password: z.string().min(8, 'Password required')
-})
+});

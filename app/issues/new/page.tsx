@@ -1,7 +1,7 @@
 'use client'
 
 import { Button, TextField, Callout, Heading } from '@radix-ui/themes';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import "easymde/dist/easymde.min.css";
 import { useForm, Controller } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
@@ -12,6 +12,8 @@ import ErrorMessage from '@/app/components/ErrorMessage';
 import Spinner from '@/app/components/Spinner';
 import dynamic from 'next/dynamic';
 import axios from 'axios';
+import { useSession } from 'next-auth/react';
+import { User } from '@prisma/client';
 const SimpleMdeEditor = dynamic(
 	() => import("react-simplemde-editor"),
 	{ ssr: false }
@@ -25,12 +27,19 @@ type IssueForm = z.infer<typeof createIssueSchema>;
 
 const NewIssuePage = () => {
   const router = useRouter();
-  const { register, control, handleSubmit, formState: { errors } } = useForm<IssueForm>({
+  const { data:session }:any = useSession();
+  const user:User = session?.user as User;
+  const { register, control, handleSubmit, setValue, formState: { errors } } = useForm<IssueForm>({
     resolver: zodResolver(createIssueSchema)
   });
   const [error, setError] = useState('');
   const [isSubmitted, setSubmitted] = useState(false);
   
+  // Use effect to capture user session
+  useEffect(() => {
+    setValue('user', user);
+  });
+
   return (
     <div className='container mx-auto'>
       <Heading className='py-5' size='8'>Create New Issue</Heading>

@@ -4,7 +4,7 @@ import { Button, Flex, Heading, TextField, Text } from '@radix-ui/themes'
 import 'easymde/dist/easymde.min.css';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -25,10 +25,17 @@ function NewProjectPage() {
     const { data:session }:any = useSession();
     const user:User = session?.user as User;
 
-    const { register, control, handleSubmit, formState: { errors } } = useForm<ProjectForm>({
+    const { register, control, setValue, handleSubmit, formState: { errors } } = useForm<ProjectForm>({
         resolver: zodResolver(createProjectSchema),
     });
     console.log(user?.id);
+
+    // Use effect to capture user session
+    useEffect(() => {
+        setValue('createdUser', user?.id);
+        setValue('updatedUser', user?.id);
+        setValue('user', user);
+    });
 
     const [error, setError] = useState('');
     const [isSubmitted, setSubmitted] = useState(false);
@@ -48,12 +55,6 @@ function NewProjectPage() {
                         setError('An unexpected error occured.');
                     }
                 })}>
-                <TextField.Root style={{display: 'none'}} >
-                    <TextField.Input type='number' value={user?.id} {...register('createdUser')}/>
-                </TextField.Root>
-                <TextField.Root style={{display: 'none'}}>
-                    <TextField.Input type='number' value={user?.id} {...register('updatedUser')}/>
-                </TextField.Root>
                 <Text>Title</Text>
                 <TextField.Root>
                     <TextField.Input placeholder='Title' {...register('title')}/>
